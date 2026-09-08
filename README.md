@@ -69,3 +69,6 @@ python scripts/update_icon_eu.py
 ```
 
 Interface React : Node.js 22.13+, `pnpm install`, `pnpm dev`, puis ouvrir l’adresse locale indiquée. Compilation : `pnpm build`.
+
+Les rafales manquantes aux heures interpolées après +78 h sont signalées par un tiret : un maximum sur une heure ne peut pas être étendu aux deux heures précédentes.
+

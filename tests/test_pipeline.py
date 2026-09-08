@@ -3,9 +3,13 @@ import unittest
 from pathlib import Path
 import numpy as np
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'scripts'))
-from update_icon_eu import VARIABLES, STEPS, select_run, grid_indices, to_hourly
+from update_icon_eu import VARIABLES, STEPS, select_run, grid_indices, to_hourly, step_hours
 
 class PipelineTests(unittest.TestCase):
+    def test_eccodes_time_units(self):
+        for value, expected in [('0m',0),('60m',1),('3600s',1),('78',78),('3h',3),('5D',120)]:
+            self.assertEqual(step_hours(value), expected)
+        with self.assertRaises(ValueError): step_hours('30m')
     def test_incomplete_new_run_does_not_replace_complete_run(self):
         listings = {v: {('2026090700',s):'url' for s in STEPS} for v in VARIABLES}
         for v in VARIABLES: listings[v][('2026090706',0)] = 'url'
@@ -26,6 +30,12 @@ class PipelineTests(unittest.TestCase):
         np.testing.assert_allclose(hourly[0,0,:4],[10,2,18,36])
         self.assertEqual(float(hourly[:,0,1].sum()),240)
         self.assertEqual(periods[78:81],[3,3,3])
+        actual_dwd_starts=[max(0,s-1) for s in STEPS]
+        hourly, periods=to_hourly(raw,actual_dwd_starts)
+        self.assertTrue(np.isnan(hourly[78,0,3]))
+        self.assertTrue(np.isnan(hourly[79,0,3]))
+        self.assertEqual(periods[78:81],[None,None,1])
+        self.assertEqual(hourly[80,0,3],36)
         raw['tot_prec'][-1]=0
         with self.assertRaises(ValueError): to_hourly(raw,starts)
 if __name__=='__main__': unittest.main()

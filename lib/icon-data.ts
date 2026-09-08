@@ -1,8 +1,8 @@
 export type Place = {id: string; name: string; latitude: number; longitude: number; department: string; admin1?: string; postalCodes?: string[]};
-export type Forecast = {hourly: Record<string, (number | null)[]> & {time: number[]}; timezone: string; model_run: string; generated_at: string; gust_period_hours: number[]};
+export type Forecast = {hourly: Record<string, (number | null)[]> & {time: number[]}; timezone: string; model_run: string; generated_at: string; gust_period_hours: (number | null)[]};
 const SOURCE = 'https://raw.githubusercontent.com/alertesmeteo-hub/ICON-EU-7-km/data/';
 type Catalog = {communes: [string, string, string, string[], number, number][]};
-type Department = {schema_version: number; model: string; time: number[]; timezone: string; model_run: string; generated_at: string; columns: string[]; gust_period_hours: number[]; communes: Record<string, {values: (number | null)[][]}>};
+type Department = {schema_version: number; model: string; time: number[]; timezone: string; model_run: string; generated_at: string; columns: string[]; gust_period_hours: (number | null)[]; communes: Record<string, {values: (number | null)[][]}>};
 async function json<T>(file: string, signal: AbortSignal): Promise<T> {
   const r = await fetch(SOURCE + file, {signal: AbortSignal.any([signal, AbortSignal.timeout(30000)]), cache: 'no-cache'});
   if (!r.ok) throw Error('Prévisions indisponibles. Attendez la fin du run GitHub, puis réessayez.');
@@ -27,3 +27,4 @@ export async function getForecast(place: Place, signal: AbortSignal): Promise<Fo
   data.columns.forEach((field, index) => {hourly[field] = commune.values.map(row => row[index]);});
   return {hourly, timezone: data.timezone, model_run: data.model_run, generated_at: data.generated_at, gust_period_hours: data.gust_period_hours};
 }
+

@@ -40,7 +40,7 @@
           const body = document.createElement('tbody');
           indices.filter(i => date(data.time[i]) === day).forEach(i => {
             const v = commune.values[i], tr = document.createElement('tr');
-            const cells = [new Date(data.time[i] * 1000).toLocaleTimeString('fr-FR', { timeZone: 'Europe/Paris', hour: '2-digit', minute: '2-digit' }), format(v[0], '°C'), format(v[1], 'mm'), format(v[2], 'km/h'), format(v[3], 'km/h') + ' / ' + data.gust_period_hours[i] + ' h', format(v[4], '%')];
+            const cells = [new Date(data.time[i] * 1000).toLocaleTimeString('fr-FR', { timeZone: 'Europe/Paris', hour: '2-digit', minute: '2-digit' }), format(v[0], '°C'), format(v[1], 'mm'), format(v[2], 'km/h'), (v[3] == null ? '—' : format(v[3], 'km/h') + ' / ' + data.gust_period_hours[i] + ' h'), format(v[4], '%')];
             cells.forEach(value => { const td = document.createElement('td'); td.textContent = value; tr.append(td); }); body.append(tr);
           });
           table.append(body); el('table').replaceChildren(table);
@@ -72,4 +72,5 @@
   function start() { document.querySelectorAll('.icon-eu-widget').forEach(init); }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start); else start();
 })();
+
 

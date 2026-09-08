@@ -8,3 +8,5 @@ Instruction utilisateur du 8 septembre 2026 : toujours livrer les nouveaux modul
 - Lancer et vérifier le premier run après mise en place lorsque les accès le permettent.
 - Préserver la dernière publication valide en cas de données amont incomplètes.
 - Ne pas livrer uniquement une application React nécessitant un terminal local.
+
+- Emplacement permanent des ZIP WordPress demandé par l’utilisateur : `C:\Users\franc\Documents\ChatGPT\Wordpress`. Y déposer chaque nouvelle version de ZIP WordPress et donner le lien vers ce fichier. Ne pas y mettre les archives React ou de projet complet.

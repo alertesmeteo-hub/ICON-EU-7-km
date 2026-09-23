@@ -1,6 +1,6 @@
 {
   "model": "ICON-EU",
-  "pipeline_version": "3.1.0",
+  "pipeline_version": "3.1.1",
   "resolution_km": 7,
   "run": "2026092306",
   "steps": [

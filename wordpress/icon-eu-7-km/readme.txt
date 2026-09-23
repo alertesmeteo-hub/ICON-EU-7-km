@@ -1,5 +1,5 @@
 === ICON-EU 7 km — Alertes-météo ===
-Version: 3.0.0
+Version: 3.1.0
 Requires PHP: 7.4
 
 Installer le ZIP dans Extensions > Ajouter > Téléverser, puis activer.
@@ -12,3 +12,5 @@ La mise à jour automatique est vérifiée toutes les heures. Aucun secret mét�
 Version 3.0.0 : cartes fixes France/Europe et zoom interactif pour la température
 à 2 m, les précipitations totales, le vent à 10 m, les rafales et la nébulosité,
 aux échéances H+24, H+48, H+72, H+96 et H+120.
+
+Version 3.1.0 : interface harmonisée avec les autres modules Alertes-Météo.

@@ -1,6 +1,6 @@
 {
   "model": "ICON-EU",
-  "pipeline_version": "3.1.1",
+  "pipeline_version": "3.2.0",
   "resolution_km": 7,
   "run": "2026092312",
   "steps": [
@@ -18,52 +18,182 @@
         {
           "region": "france",
           "lead_hour": 24,
-          "image": "maps/france/temperature-024h.png"
+          "image": "maps/france/temperature-024h.png",
+          "values": "maps/france/temperature-024h-values.json",
+          "bounds": [
+            -6.0,
+            10.5,
+            41.0,
+            52.0
+          ],
+          "plot_box": [
+            0.317966,
+            0.12,
+            0.543284,
+            0.77
+          ]
         },
         {
           "region": "europe",
           "lead_hour": 24,
-          "image": "maps/europe/temperature-024h.png"
+          "image": "maps/europe/temperature-024h.png",
+          "values": "maps/europe/temperature-024h-values.json",
+          "bounds": [
+            -25.0,
+            45.0,
+            30.0,
+            72.0
+          ],
+          "plot_box": [
+            0.309371,
+            0.12,
+            0.551879,
+            0.77
+          ]
         },
         {
           "region": "france",
           "lead_hour": 48,
-          "image": "maps/france/temperature-048h.png"
+          "image": "maps/france/temperature-048h.png",
+          "values": "maps/france/temperature-048h-values.json",
+          "bounds": [
+            -6.0,
+            10.5,
+            41.0,
+            52.0
+          ],
+          "plot_box": [
+            0.317966,
+            0.12,
+            0.543284,
+            0.77
+          ]
         },
         {
           "region": "europe",
           "lead_hour": 48,
-          "image": "maps/europe/temperature-048h.png"
+          "image": "maps/europe/temperature-048h.png",
+          "values": "maps/europe/temperature-048h-values.json",
+          "bounds": [
+            -25.0,
+            45.0,
+            30.0,
+            72.0
+          ],
+          "plot_box": [
+            0.309371,
+            0.12,
+            0.551879,
+            0.77
+          ]
         },
         {
           "region": "france",
           "lead_hour": 72,
-          "image": "maps/france/temperature-072h.png"
+          "image": "maps/france/temperature-072h.png",
+          "values": "maps/france/temperature-072h-values.json",
+          "bounds": [
+            -6.0,
+            10.5,
+            41.0,
+            52.0
+          ],
+          "plot_box": [
+            0.317966,
+            0.12,
+            0.543284,
+            0.77
+          ]
         },
         {
           "region": "europe",
           "lead_hour": 72,
-          "image": "maps/europe/temperature-072h.png"
+          "image": "maps/europe/temperature-072h.png",
+          "values": "maps/europe/temperature-072h-values.json",
+          "bounds": [
+            -25.0,
+            45.0,
+            30.0,
+            72.0
+          ],
+          "plot_box": [
+            0.309371,
+            0.12,
+            0.551879,
+            0.77
+          ]
         },
         {
           "region": "france",
           "lead_hour": 96,
-          "image": "maps/france/temperature-096h.png"
+          "image": "maps/france/temperature-096h.png",
+          "values": "maps/france/temperature-096h-values.json",
+          "bounds": [
+            -6.0,
+            10.5,
+            41.0,
+            52.0
+          ],
+          "plot_box": [
+            0.317966,
+            0.12,
+            0.543284,
+            0.77
+          ]
         },
         {
           "region": "europe",
           "lead_hour": 96,
-          "image": "maps/europe/temperature-096h.png"
+          "image": "maps/europe/temperature-096h.png",
+          "values": "maps/europe/temperature-096h-values.json",
+          "bounds": [
+            -25.0,
+            45.0,
+            30.0,
+            72.0
+          ],
+          "plot_box": [
+            0.309371,
+            0.12,
+            0.551879,
+            0.77
+          ]
         },
         {
           "region": "france",
           "lead_hour": 120,
-          "image": "maps/france/temperature-120h.png"
+          "image": "maps/france/temperature-120h.png",
+          "values": "maps/france/temperature-120h-values.json",
+          "bounds": [
+            -6.0,
+            10.5,
+            41.0,
+            52.0
+          ],
+          "plot_box": [
+            0.317966,
+            0.12,
+            0.543284,
+            0.77
+          ]
         },
         {
           "region": "europe",
           "lead_hour": 120,
-          "image": "maps/europe/temperature-120h.png"
+          "image": "maps/europe/temperature-120h.png",
+          "values": "maps/europe/temperature-120h-values.json",
+          "bounds": [
+            -25.0,
+            45.0,
+            30.0,
+            72.0
+          ],
+          "plot_box": [
+            0.309371,
+            0.12,
+            0.551879,
+            0.77
+          ]
         }
       ]
     },
@@ -74,52 +204,182 @@
         {
           "region": "france",
           "lead_hour": 24,
-          "image": "maps/france/precipitation-024h.png"
+          "image": "maps/france/precipitation-024h.png",
+          "values": "maps/france/precipitation-024h-values.json",
+          "bounds": [
+            -6.0,
+            10.5,
+            41.0,
+            52.0
+          ],
+          "plot_box": [
+            0.317966,
+            0.12,
+            0.543284,
+            0.77
+          ]
         },
         {
           "region": "europe",
           "lead_hour": 24,
-          "image": "maps/europe/precipitation-024h.png"
+          "image": "maps/europe/precipitation-024h.png",
+          "values": "maps/europe/precipitation-024h-values.json",
+          "bounds": [
+            -25.0,
+            45.0,
+            30.0,
+            72.0
+          ],
+          "plot_box": [
+            0.309371,
+            0.12,
+            0.551879,
+            0.77
+          ]
         },
         {
           "region": "france",
           "lead_hour": 48,
-          "image": "maps/france/precipitation-048h.png"
+          "image": "maps/france/precipitation-048h.png",
+          "values": "maps/france/precipitation-048h-values.json",
+          "bounds": [
+            -6.0,
+            10.5,
+            41.0,
+            52.0
+          ],
+          "plot_box": [
+            0.317966,
+            0.12,
+            0.543284,
+            0.77
+          ]
         },
         {
           "region": "europe",
           "lead_hour": 48,
-          "image": "maps/europe/precipitation-048h.png"
+          "image": "maps/europe/precipitation-048h.png",
+          "values": "maps/europe/precipitation-048h-values.json",
+          "bounds": [
+            -25.0,
+            45.0,
+            30.0,
+            72.0
+          ],
+          "plot_box": [
+            0.309371,
+            0.12,
+            0.551879,
+            0.77
+          ]
         },
         {
           "region": "france",
           "lead_hour": 72,
-          "image": "maps/france/precipitation-072h.png"
+          "image": "maps/france/precipitation-072h.png",
+          "values": "maps/france/precipitation-072h-values.json",
+          "bounds": [
+            -6.0,
+            10.5,
+            41.0,
+            52.0
+          ],
+          "plot_box": [
+            0.317966,
+            0.12,
+            0.543284,
+            0.77
+          ]
         },
         {
           "region": "europe",
           "lead_hour": 72,
-          "image": "maps/europe/precipitation-072h.png"
+          "image": "maps/europe/precipitation-072h.png",
+          "values": "maps/europe/precipitation-072h-values.json",
+          "bounds": [
+            -25.0,
+            45.0,
+            30.0,
+            72.0
+          ],
+          "plot_box": [
+            0.309371,
+            0.12,
+            0.551879,
+            0.77
+          ]
         },
         {
           "region": "france",
           "lead_hour": 96,
-          "image": "maps/france/precipitation-096h.png"
+          "image": "maps/france/precipitation-096h.png",
+          "values": "maps/france/precipitation-096h-values.json",
+          "bounds": [
+            -6.0,
+            10.5,
+            41.0,
+            52.0
+          ],
+          "plot_box": [
+            0.317966,
+            0.12,
+            0.543284,
+            0.77
+          ]
         },
         {
           "region": "europe",
           "lead_hour": 96,
-          "image": "maps/europe/precipitation-096h.png"
+          "image": "maps/europe/precipitation-096h.png",
+          "values": "maps/europe/precipitation-096h-values.json",
+          "bounds": [
+            -25.0,
+            45.0,
+            30.0,
+            72.0
+          ],
+          "plot_box": [
+            0.309371,
+            0.12,
+            0.551879,
+            0.77
+          ]
         },
         {
           "region": "france",
           "lead_hour": 120,
-          "image": "maps/france/precipitation-120h.png"
+          "image": "maps/france/precipitation-120h.png",
+          "values": "maps/france/precipitation-120h-values.json",
+          "bounds": [
+            -6.0,
+            10.5,
+            41.0,
+            52.0
+          ],
+          "plot_box": [
+            0.317966,
+            0.12,
+            0.543284,
+            0.77
+          ]
         },
         {
           "region": "europe",
           "lead_hour": 120,
-          "image": "maps/europe/precipitation-120h.png"
+          "image": "maps/europe/precipitation-120h.png",
+          "values": "maps/europe/precipitation-120h-values.json",
+          "bounds": [
+            -25.0,
+            45.0,
+            30.0,
+            72.0
+          ],
+          "plot_box": [
+            0.309371,
+            0.12,
+            0.551879,
+            0.77
+          ]
         }
       ]
     },
@@ -130,52 +390,182 @@
         {
           "region": "france",
           "lead_hour": 24,
-          "image": "maps/france/rafales-024h.png"
+          "image": "maps/france/rafales-024h.png",
+          "values": "maps/france/rafales-024h-values.json",
+          "bounds": [
+            -6.0,
+            10.5,
+            41.0,
+            52.0
+          ],
+          "plot_box": [
+            0.317966,
+            0.12,
+            0.543284,
+            0.77
+          ]
         },
         {
           "region": "europe",
           "lead_hour": 24,
-          "image": "maps/europe/rafales-024h.png"
+          "image": "maps/europe/rafales-024h.png",
+          "values": "maps/europe/rafales-024h-values.json",
+          "bounds": [
+            -25.0,
+            45.0,
+            30.0,
+            72.0
+          ],
+          "plot_box": [
+            0.309371,
+            0.12,
+            0.551879,
+            0.77
+          ]
         },
         {
           "region": "france",
           "lead_hour": 48,
-          "image": "maps/france/rafales-048h.png"
+          "image": "maps/france/rafales-048h.png",
+          "values": "maps/france/rafales-048h-values.json",
+          "bounds": [
+            -6.0,
+            10.5,
+            41.0,
+            52.0
+          ],
+          "plot_box": [
+            0.317966,
+            0.12,
+            0.543284,
+            0.77
+          ]
         },
         {
           "region": "europe",
           "lead_hour": 48,
-          "image": "maps/europe/rafales-048h.png"
+          "image": "maps/europe/rafales-048h.png",
+          "values": "maps/europe/rafales-048h-values.json",
+          "bounds": [
+            -25.0,
+            45.0,
+            30.0,
+            72.0
+          ],
+          "plot_box": [
+            0.309371,
+            0.12,
+            0.551879,
+            0.77
+          ]
         },
         {
           "region": "france",
           "lead_hour": 72,
-          "image": "maps/france/rafales-072h.png"
+          "image": "maps/france/rafales-072h.png",
+          "values": "maps/france/rafales-072h-values.json",
+          "bounds": [
+            -6.0,
+            10.5,
+            41.0,
+            52.0
+          ],
+          "plot_box": [
+            0.317966,
+            0.12,
+            0.543284,
+            0.77
+          ]
         },
         {
           "region": "europe",
           "lead_hour": 72,
-          "image": "maps/europe/rafales-072h.png"
+          "image": "maps/europe/rafales-072h.png",
+          "values": "maps/europe/rafales-072h-values.json",
+          "bounds": [
+            -25.0,
+            45.0,
+            30.0,
+            72.0
+          ],
+          "plot_box": [
+            0.309371,
+            0.12,
+            0.551879,
+            0.77
+          ]
         },
         {
           "region": "france",
           "lead_hour": 96,
-          "image": "maps/france/rafales-096h.png"
+          "image": "maps/france/rafales-096h.png",
+          "values": "maps/france/rafales-096h-values.json",
+          "bounds": [
+            -6.0,
+            10.5,
+            41.0,
+            52.0
+          ],
+          "plot_box": [
+            0.317966,
+            0.12,
+            0.543284,
+            0.77
+          ]
         },
         {
           "region": "europe",
           "lead_hour": 96,
-          "image": "maps/europe/rafales-096h.png"
+          "image": "maps/europe/rafales-096h.png",
+          "values": "maps/europe/rafales-096h-values.json",
+          "bounds": [
+            -25.0,
+            45.0,
+            30.0,
+            72.0
+          ],
+          "plot_box": [
+            0.309371,
+            0.12,
+            0.551879,
+            0.77
+          ]
         },
         {
           "region": "france",
           "lead_hour": 120,
-          "image": "maps/france/rafales-120h.png"
+          "image": "maps/france/rafales-120h.png",
+          "values": "maps/france/rafales-120h-values.json",
+          "bounds": [
+            -6.0,
+            10.5,
+            41.0,
+            52.0
+          ],
+          "plot_box": [
+            0.317966,
+            0.12,
+            0.543284,
+            0.77
+          ]
         },
         {
           "region": "europe",
           "lead_hour": 120,
-          "image": "maps/europe/rafales-120h.png"
+          "image": "maps/europe/rafales-120h.png",
+          "values": "maps/europe/rafales-120h-values.json",
+          "bounds": [
+            -25.0,
+            45.0,
+            30.0,
+            72.0
+          ],
+          "plot_box": [
+            0.309371,
+            0.12,
+            0.551879,
+            0.77
+          ]
         }
       ]
     },
@@ -186,52 +576,182 @@
         {
           "region": "france",
           "lead_hour": 24,
-          "image": "maps/france/nuages-024h.png"
+          "image": "maps/france/nuages-024h.png",
+          "values": "maps/france/nuages-024h-values.json",
+          "bounds": [
+            -6.0,
+            10.5,
+            41.0,
+            52.0
+          ],
+          "plot_box": [
+            0.317966,
+            0.12,
+            0.543284,
+            0.77
+          ]
         },
         {
           "region": "europe",
           "lead_hour": 24,
-          "image": "maps/europe/nuages-024h.png"
+          "image": "maps/europe/nuages-024h.png",
+          "values": "maps/europe/nuages-024h-values.json",
+          "bounds": [
+            -25.0,
+            45.0,
+            30.0,
+            72.0
+          ],
+          "plot_box": [
+            0.309371,
+            0.12,
+            0.551879,
+            0.77
+          ]
         },
         {
           "region": "france",
           "lead_hour": 48,
-          "image": "maps/france/nuages-048h.png"
+          "image": "maps/france/nuages-048h.png",
+          "values": "maps/france/nuages-048h-values.json",
+          "bounds": [
+            -6.0,
+            10.5,
+            41.0,
+            52.0
+          ],
+          "plot_box": [
+            0.317966,
+            0.12,
+            0.543284,
+            0.77
+          ]
         },
         {
           "region": "europe",
           "lead_hour": 48,
-          "image": "maps/europe/nuages-048h.png"
+          "image": "maps/europe/nuages-048h.png",
+          "values": "maps/europe/nuages-048h-values.json",
+          "bounds": [
+            -25.0,
+            45.0,
+            30.0,
+            72.0
+          ],
+          "plot_box": [
+            0.309371,
+            0.12,
+            0.551879,
+            0.77
+          ]
         },
         {
           "region": "france",
           "lead_hour": 72,
-          "image": "maps/france/nuages-072h.png"
+          "image": "maps/france/nuages-072h.png",
+          "values": "maps/france/nuages-072h-values.json",
+          "bounds": [
+            -6.0,
+            10.5,
+            41.0,
+            52.0
+          ],
+          "plot_box": [
+            0.317966,
+            0.12,
+            0.543284,
+            0.77
+          ]
         },
         {
           "region": "europe",
           "lead_hour": 72,
-          "image": "maps/europe/nuages-072h.png"
+          "image": "maps/europe/nuages-072h.png",
+          "values": "maps/europe/nuages-072h-values.json",
+          "bounds": [
+            -25.0,
+            45.0,
+            30.0,
+            72.0
+          ],
+          "plot_box": [
+            0.309371,
+            0.12,
+            0.551879,
+            0.77
+          ]
         },
         {
           "region": "france",
           "lead_hour": 96,
-          "image": "maps/france/nuages-096h.png"
+          "image": "maps/france/nuages-096h.png",
+          "values": "maps/france/nuages-096h-values.json",
+          "bounds": [
+            -6.0,
+            10.5,
+            41.0,
+            52.0
+          ],
+          "plot_box": [
+            0.317966,
+            0.12,
+            0.543284,
+            0.77
+          ]
         },
         {
           "region": "europe",
           "lead_hour": 96,
-          "image": "maps/europe/nuages-096h.png"
+          "image": "maps/europe/nuages-096h.png",
+          "values": "maps/europe/nuages-096h-values.json",
+          "bounds": [
+            -25.0,
+            45.0,
+            30.0,
+            72.0
+          ],
+          "plot_box": [
+            0.309371,
+            0.12,
+            0.551879,
+            0.77
+          ]
         },
         {
           "region": "france",
           "lead_hour": 120,
-          "image": "maps/france/nuages-120h.png"
+          "image": "maps/france/nuages-120h.png",
+          "values": "maps/france/nuages-120h-values.json",
+          "bounds": [
+            -6.0,
+            10.5,
+            41.0,
+            52.0
+          ],
+          "plot_box": [
+            0.317966,
+            0.12,
+            0.543284,
+            0.77
+          ]
         },
         {
           "region": "europe",
           "lead_hour": 120,
-          "image": "maps/europe/nuages-120h.png"
+          "image": "maps/europe/nuages-120h.png",
+          "values": "maps/europe/nuages-120h-values.json",
+          "bounds": [
+            -25.0,
+            45.0,
+            30.0,
+            72.0
+          ],
+          "plot_box": [
+            0.309371,
+            0.12,
+            0.551879,
+            0.77
+          ]
         }
       ]
     },
@@ -242,52 +762,182 @@
         {
           "region": "france",
           "lead_hour": 24,
-          "image": "maps/france/vent-024h.png"
+          "image": "maps/france/vent-024h.png",
+          "values": "maps/france/vent-024h-values.json",
+          "bounds": [
+            -6.0,
+            10.5,
+            41.0,
+            52.0
+          ],
+          "plot_box": [
+            0.317966,
+            0.12,
+            0.543284,
+            0.77
+          ]
         },
         {
           "region": "europe",
           "lead_hour": 24,
-          "image": "maps/europe/vent-024h.png"
+          "image": "maps/europe/vent-024h.png",
+          "values": "maps/europe/vent-024h-values.json",
+          "bounds": [
+            -25.0,
+            45.0,
+            30.0,
+            72.0
+          ],
+          "plot_box": [
+            0.309371,
+            0.12,
+            0.551879,
+            0.77
+          ]
         },
         {
           "region": "france",
           "lead_hour": 48,
-          "image": "maps/france/vent-048h.png"
+          "image": "maps/france/vent-048h.png",
+          "values": "maps/france/vent-048h-values.json",
+          "bounds": [
+            -6.0,
+            10.5,
+            41.0,
+            52.0
+          ],
+          "plot_box": [
+            0.317966,
+            0.12,
+            0.543284,
+            0.77
+          ]
         },
         {
           "region": "europe",
           "lead_hour": 48,
-          "image": "maps/europe/vent-048h.png"
+          "image": "maps/europe/vent-048h.png",
+          "values": "maps/europe/vent-048h-values.json",
+          "bounds": [
+            -25.0,
+            45.0,
+            30.0,
+            72.0
+          ],
+          "plot_box": [
+            0.309371,
+            0.12,
+            0.551879,
+            0.77
+          ]
         },
         {
           "region": "france",
           "lead_hour": 72,
-          "image": "maps/france/vent-072h.png"
+          "image": "maps/france/vent-072h.png",
+          "values": "maps/france/vent-072h-values.json",
+          "bounds": [
+            -6.0,
+            10.5,
+            41.0,
+            52.0
+          ],
+          "plot_box": [
+            0.317966,
+            0.12,
+            0.543284,
+            0.77
+          ]
         },
         {
           "region": "europe",
           "lead_hour": 72,
-          "image": "maps/europe/vent-072h.png"
+          "image": "maps/europe/vent-072h.png",
+          "values": "maps/europe/vent-072h-values.json",
+          "bounds": [
+            -25.0,
+            45.0,
+            30.0,
+            72.0
+          ],
+          "plot_box": [
+            0.309371,
+            0.12,
+            0.551879,
+            0.77
+          ]
         },
         {
           "region": "france",
           "lead_hour": 96,
-          "image": "maps/france/vent-096h.png"
+          "image": "maps/france/vent-096h.png",
+          "values": "maps/france/vent-096h-values.json",
+          "bounds": [
+            -6.0,
+            10.5,
+            41.0,
+            52.0
+          ],
+          "plot_box": [
+            0.317966,
+            0.12,
+            0.543284,
+            0.77
+          ]
         },
         {
           "region": "europe",
           "lead_hour": 96,
-          "image": "maps/europe/vent-096h.png"
+          "image": "maps/europe/vent-096h.png",
+          "values": "maps/europe/vent-096h-values.json",
+          "bounds": [
+            -25.0,
+            45.0,
+            30.0,
+            72.0
+          ],
+          "plot_box": [
+            0.309371,
+            0.12,
+            0.551879,
+            0.77
+          ]
         },
         {
           "region": "france",
           "lead_hour": 120,
-          "image": "maps/france/vent-120h.png"
+          "image": "maps/france/vent-120h.png",
+          "values": "maps/france/vent-120h-values.json",
+          "bounds": [
+            -6.0,
+            10.5,
+            41.0,
+            52.0
+          ],
+          "plot_box": [
+            0.317966,
+            0.12,
+            0.543284,
+            0.77
+          ]
         },
         {
           "region": "europe",
           "lead_hour": 120,
-          "image": "maps/europe/vent-120h.png"
+          "image": "maps/europe/vent-120h.png",
+          "values": "maps/europe/vent-120h-values.json",
+          "bounds": [
+            -25.0,
+            45.0,
+            30.0,
+            72.0
+          ],
+          "plot_box": [
+            0.309371,
+            0.12,
+            0.551879,
+            0.77
+          ]
         }
       ]
     }

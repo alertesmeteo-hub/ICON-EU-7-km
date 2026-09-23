@@ -117,7 +117,7 @@ def generate_maps(listings, run, output_dir, download, config_dir):
                 relative = f"maps/{region}/{product}-{step:03d}h.png"
                 _render(lon, lat, values, product, region, run, step, output_dir / relative, config_dir)
                 manifests[product].append({"region": region, "lead_hour": step, "image": relative})
-    payload = {"model": "ICON-EU", "resolution_km": 7, "run": run, "steps": list(MAP_STEPS),
+    payload = {"model": "ICON-EU", "pipeline_version": "3.1.0", "resolution_km": 7, "run": run, "steps": list(MAP_STEPS),
                "products": {key: {"label": value["label"], "unit": value["unit"], "maps": manifests[key]}
                             for key, value in PRODUCTS.items()}}
     (output_dir / "maps" / "manifest.json").write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")

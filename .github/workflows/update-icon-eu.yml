@@ -90,12 +90,16 @@ jobs:
               git -C "$publish_dir" reset --hard FETCH_HEAD
               decision="$(python - "$source_dir/index.json" "$publish_dir/index.json" <<'PY'
           import json, sys
+          from pathlib import Path
           def publication_key(path):
               data = json.load(open(path, encoding='utf-8'))
               model = data.get('model') if isinstance(data.get('model'), dict) else {}
               return (model.get('run_time') or data.get('model_run', ''),
                       model.get('pipeline_version') or data.get('pipeline_version', ''))
-          print('skip' if publication_key(sys.argv[2]) >= publication_key(sys.argv[1]) else 'publish')
+          source_root = Path(sys.argv[1]).parent
+          published_root = Path(sys.argv[2]).parent
+          maps_missing = (source_root/'maps'/'manifest.json').exists() and not (published_root/'maps'/'manifest.json').exists()
+          print('publish' if maps_missing or publication_key(sys.argv[2]) < publication_key(sys.argv[1]) else 'skip')
           PY
               )"
               if [ "$decision" = 'skip' ]; then

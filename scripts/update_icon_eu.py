@@ -149,7 +149,7 @@ def generate(catalog, output, repository, force=False):
     times = [int((run_date + timedelta(hours=h)).timestamp()) for h in range(1,121)]
     departments = sorted({c[2] for c in communes})
     if len(departments) != 96: raise ValueError('Expected 96 metropolitan departments')
-    metadata = {'schema_version':2, 'status':'ok', 'model':'ICON-EU', 'resolution_km':7, 'model_run':run_date.isoformat(), 'generated_at':datetime.now(timezone.utc).isoformat(), 'source':'DWD Open Data', 'source_url':BASE, 'timezone':'Europe/Paris', 'time':times, 'columns':COLUMNS, 'units':UNITS, 'gust_period_hours':gust_periods, 'interpolated_after_hour':78, 'coverage':{'communes':len(communes),'departments':len(departments)}, 'forecast_hours':120}
+    metadata = {'schema_version':2, 'pipeline_version':'3.1.0', 'status':'ok', 'model':'ICON-EU', 'resolution_km':7, 'model_run':run_date.isoformat(), 'generated_at':datetime.now(timezone.utc).isoformat(), 'source':'DWD Open Data', 'source_url':BASE, 'timezone':'Europe/Paris', 'time':times, 'columns':COLUMNS, 'units':UNITS, 'gust_period_hours':gust_periods, 'interpolated_after_hour':78, 'coverage':{'communes':len(communes),'departments':len(departments)}, 'forecast_hours':120}
     (output/'departements').mkdir(exist_ok=True)
     for department in departments:
         indices = [i for i,c in enumerate(communes) if c[2] == department]

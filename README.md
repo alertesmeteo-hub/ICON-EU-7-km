@@ -56,7 +56,7 @@ La source officielle reste DWD, y compris pour un usage commercial : consulter l
 - `wordpress/icon-eu-7-km/` : extension WordPress.
 - `app/` : interface React alternative utilisant la même branche `data`.
 
-La branche `data` contient `index.json`, `communes.json`, `departements/XX.json`, `maps/manifest.json` et les cartes PNG France/Europe.
+La branche `data` contient `index.json`, `communes.json`, `departements/XX.json`, `maps/manifest.json`, les 50 cartes PNG France/Europe et leurs 50 grilles numériques de survol.
 
 ## Développement facultatif
 

@@ -75,11 +75,14 @@ def _render(lon, lat, values, product, region, run, step, output, config_dir):
     from matplotlib.colors import BoundaryNorm
     spec = PRODUCTS[product]
     west, east, south, north = REGIONS[region]
-    fig, ax = plt.subplots(figsize=(11.5, 8 if region == "france" else 7), dpi=140)
+    fig, ax = plt.subplots(figsize=(12, 8.2), dpi=150)
     norm = BoundaryNorm(spec["levels"], plt.get_cmap(spec["cmap"]).N, clip=True)
     mesh = ax.pcolormesh(lon, lat, values, cmap=spec["cmap"], norm=norm, shading="auto", rasterized=True)
     _draw_boundaries(ax, config_dir)
     ax.set(xlim=(west, east), ylim=(south, north), xlabel="", ylabel="")
+    # Un degré de longitude se resserre avec la latitude. Ce rapport évite
+    # l'Europe écrasée et la France artificiellement étirée.
+    ax.set_aspect(1.0 / np.cos(np.deg2rad((south + north) / 2.0)))
     ax.set_xticks([]); ax.set_yticks([])
     run_dt = datetime.strptime(run, "%Y%m%d%H").replace(tzinfo=timezone.utc)
     ax.set_title(f"ICON-EU 7 km — {spec['label']} ({spec['unit']})\nRun {run_dt:%d/%m/%Y %H} UTC · H+{step}", fontsize=12, fontweight="bold")
@@ -89,8 +92,36 @@ def _render(lon, lat, values, product, region, run, step, output, config_dir):
             fontsize=8, color="white", fontweight="bold",
             bbox={"facecolor": "#18353e", "alpha": .88, "edgecolor": "none", "pad": 4})
     output.parent.mkdir(parents=True, exist_ok=True)
-    fig.savefig(output, bbox_inches="tight", facecolor="white")
+    fig.canvas.draw()
+    position = ax.get_position()
+    plot_box = [round(position.x0, 6), round(1.0 - position.y1, 6),
+                round(position.width, 6), round(position.height, 6)]
+    fig.savefig(output, facecolor="white")
     plt.close(fig)
+    return plot_box
+
+
+def _write_probe_grid(lon, lat, values, region, output):
+    """Ecrit une grille légère pour la valeur au survol des cartes interactives."""
+    west, east, south, north = REGIONS[region]
+    lon_indices = np.flatnonzero((lon >= west) & (lon <= east))
+    lat_indices = np.flatnonzero((lat >= south) & (lat <= north))
+    if not len(lon_indices) or not len(lat_indices):
+        raise ValueError(f"Grille ICON-EU absente de la zone {region}")
+    # Environ 0,25° : assez précis pour la sonde, mais rapide à charger.
+    lon_stride = max(1, int(round(0.25 / max(abs(float(lon[1] - lon[0])), 1e-6))))
+    lat_stride = max(1, int(round(0.25 / max(abs(float(lat[1] - lat[0])), 1e-6))))
+    lon_indices = lon_indices[::lon_stride]
+    lat_indices = lat_indices[::lat_stride]
+    sampled = values[np.ix_(lat_indices, lon_indices)]
+    payload = {
+        "bounds": [west, east, south, north],
+        "lons": np.round(lon[lon_indices], 4).tolist(),
+        "lats": np.round(lat[lat_indices], 4).tolist(),
+        "values": np.round(sampled, 1).tolist(),
+    }
+    output.parent.mkdir(parents=True, exist_ok=True)
+    output.write_text(json.dumps(payload, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
 
 
 def generate_maps(listings, run, output_dir, download, config_dir):
@@ -115,9 +146,13 @@ def generate_maps(listings, run, output_dir, download, config_dir):
                 if product == "rafales": values = values * 3.6
             for region in REGIONS:
                 relative = f"maps/{region}/{product}-{step:03d}h.png"
-                _render(lon, lat, values, product, region, run, step, output_dir / relative, config_dir)
-                manifests[product].append({"region": region, "lead_hour": step, "image": relative})
-    payload = {"model": "ICON-EU", "pipeline_version": "3.1.1", "resolution_km": 7, "run": run, "steps": list(MAP_STEPS),
+                values_relative = f"maps/{region}/{product}-{step:03d}h-values.json"
+                plot_box = _render(lon, lat, values, product, region, run, step, output_dir / relative, config_dir)
+                _write_probe_grid(lon, lat, values, region, output_dir / values_relative)
+                manifests[product].append({"region": region, "lead_hour": step, "image": relative,
+                                           "values": values_relative, "bounds": list(REGIONS[region]),
+                                           "plot_box": plot_box})
+    payload = {"model": "ICON-EU", "pipeline_version": "3.2.0", "resolution_km": 7, "run": run, "steps": list(MAP_STEPS),
                "products": {key: {"label": value["label"], "unit": value["unit"], "maps": manifests[key]}
                             for key, value in PRODUCTS.items()}}
     (output_dir / "maps" / "manifest.json").write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")

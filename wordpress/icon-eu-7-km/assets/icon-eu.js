@@ -18,6 +18,7 @@
     let catalog = [], metadata = null, selected = null, request = 0;
     let mapManifest = null, mapProduct = 'precipitation', mapRegion = 'france', mapLead = 120;
     let mapView = 'fixed', mapScale = 1, mapX = 0, mapY = 0, dragging = false, dragStart = null;
+    let mapItem = null, probeGrid = null, probeRequest = 0;
     const clear = () => { el('table').replaceChildren(); el('days').replaceChildren(); el('meta').textContent = ''; };
     async function load(place) {
       selected = place;
@@ -63,7 +64,7 @@
       } catch (error) { el('status').textContent = error.message; }
     }
     const mapPanel = el('map-panel'), tablePanel = el('table-panel'), mapImage = el('map-image');
-    const mapStatus = el('map-status'), mapSummary = el('map-summary');
+    const mapStatus = el('map-status'), mapSummary = el('map-summary'), mapProbe = el('map-probe');
     const viewButtons = [...root.querySelectorAll('[data-icon-view]')];
     const regionButtons = [...root.querySelectorAll('[data-icon-region]')];
     const zoomButtons = [...root.querySelectorAll('[data-icon-zoom]')];
@@ -72,15 +73,54 @@
       mapImage.style.cursor = mapView === 'fixed' ? 'default' : (dragging ? 'grabbing' : 'grab');
     }
     function resetMapZoom() { mapScale = 1; mapX = 0; mapY = 0; applyMapTransform(); }
+    function hideProbe() { mapProbe.hidden = true; }
+    async function loadProbe(item) {
+      const seq = ++probeRequest; probeGrid = null; hideProbe();
+      if (mapView === 'fixed' || !item.values) return;
+      try { const grid = await fetchJson(source + item.values); if (seq === probeRequest) probeGrid = grid; }
+      catch (_) { if (seq === probeRequest) probeGrid = null; }
+    }
+    function nearestIndex(values, target) {
+      let best = 0, distance = Infinity;
+      values.forEach((value, index) => { const next = Math.abs(Number(value) - target); if (next < distance) { best = index; distance = next; } });
+      return best;
+    }
+    function showProbe(event) {
+      if (mapView === 'fixed' || dragging || !probeGrid || !mapItem) { hideProbe(); return; }
+      const imageRect = mapImage.getBoundingClientRect(), viewerRect = mapImage.parentElement.getBoundingClientRect();
+      const box = mapItem.plot_box || [0, 0, 1, 1];
+      const imageX = (event.clientX - imageRect.left) / imageRect.width;
+      const imageY = (event.clientY - imageRect.top) / imageRect.height;
+      const x = (imageX - box[0]) / box[2], y = (imageY - box[1]) / box[3];
+      if (x < 0 || x > 1 || y < 0 || y > 1) { hideProbe(); return; }
+      const bounds = probeGrid.bounds;
+      const longitude = bounds[0] + x * (bounds[1] - bounds[0]);
+      const latitude = bounds[3] - y * (bounds[3] - bounds[2]);
+      const ix = nearestIndex(probeGrid.lons, longitude), iy = nearestIndex(probeGrid.lats, latitude);
+      const value = probeGrid.values[iy] && probeGrid.values[iy][ix];
+      if (value == null || !Number.isFinite(Number(value))) { hideProbe(); return; }
+      const unit = mapManifest.products[mapProduct].unit;
+      const shown = unit === 'km/h' ? Math.round(Number(value) / 5) * 5 : Math.round(Number(value) * 10) / 10;
+      mapProbe.querySelector('strong').textContent = shown.toLocaleString('fr-FR') + ' ' + unit;
+      mapProbe.querySelector('span').textContent = mapManifest.products[mapProduct].label + ' · H+' + mapLead;
+      mapProbe.hidden = false;
+      const probeWidth = mapProbe.offsetWidth || 160, probeHeight = mapProbe.offsetHeight || 52;
+      let left = event.clientX - viewerRect.left + 14, top = event.clientY - viewerRect.top + 14;
+      if (left + probeWidth > viewerRect.width - 8) left -= probeWidth + 28;
+      if (top + probeHeight > viewerRect.height - 8) top -= probeHeight + 28;
+      mapProbe.style.left = Math.max(8, left) + 'px'; mapProbe.style.top = Math.max(8, top) + 'px';
+    }
     function renderMap() {
       if (!mapManifest) return;
       const product = mapManifest.products[mapProduct];
       const item = product.maps.find(m => m.region === mapRegion && Number(m.lead_hour) === Number(mapLead));
       if (!item) { mapStatus.textContent = 'Carte indisponible pour cette échéance.'; return; }
+      mapItem = item;
       mapStatus.textContent = 'Chargement de la carte…';
       mapSummary.textContent = `${product.label} · ${mapRegion === 'france' ? 'France' : 'Europe'} · H+${mapLead}`;
       mapImage.alt = `Carte ICON-EU ${product.label}, ${mapRegion}, échéance H+${mapLead}`;
       mapImage.src = source + item.image;
+      void loadProbe(item);
       resetMapZoom();
       [...el('products').querySelectorAll('button')].forEach(b => b.setAttribute('aria-pressed', String(b.dataset.product === mapProduct)));
       [...el('leads').querySelectorAll('button')].forEach(b => b.setAttribute('aria-pressed', String(Number(b.dataset.lead) === Number(mapLead))));
@@ -111,6 +151,7 @@
       if (!isTable && view !== 'fixed') { mapRegion = view; }
       el('regions').hidden = !(!isTable && view === 'fixed');
       root.classList.toggle('icon-eu-interactive', !isTable && view !== 'fixed');
+      hideProbe();
       if (!isTable) renderMap();
     }
     viewButtons.forEach(button => button.addEventListener('click', () => selectView(button.dataset.iconView)));
@@ -124,8 +165,9 @@
     mapImage.addEventListener('pointerdown', event => {
       if (mapView === 'fixed' || mapScale === 1) return; dragging = true; dragStart = [event.clientX - mapX, event.clientY - mapY]; mapImage.setPointerCapture(event.pointerId); applyMapTransform();
     });
-    mapImage.addEventListener('pointermove', event => { if (!dragging) return; mapX = event.clientX - dragStart[0]; mapY = event.clientY - dragStart[1]; applyMapTransform(); });
-    mapImage.addEventListener('pointerup', () => { dragging = false; applyMapTransform(); });
+    mapImage.addEventListener('pointermove', event => { if (dragging) { mapX = event.clientX - dragStart[0]; mapY = event.clientY - dragStart[1]; applyMapTransform(); hideProbe(); } else showProbe(event); });
+    mapImage.addEventListener('pointerleave', hideProbe);
+    mapImage.addEventListener('pointerup', event => { dragging = false; applyMapTransform(); showProbe(event); });
     mapImage.addEventListener('wheel', event => {
       if (mapView === 'fixed') return; event.preventDefault(); mapScale = Math.max(1, Math.min(5, mapScale + (event.deltaY < 0 ? .2 : -.2))); applyMapTransform();
     }, { passive: false });

@@ -2,7 +2,7 @@
 /**
  * Plugin Name: ICON-EU 7 km — Alertes-météo
  * Description: Prévisions officielles DWD préparées par GitHub Actions. Shortcode [icon_eu_meteo].
- * Version: 3.1.0
+ * Version: 3.1.1
  * Requires PHP: 7.4
  * Author: Alertes-météo
  */
@@ -10,8 +10,8 @@ if (!defined('ABSPATH')) { exit; }
 add_shortcode('icon_eu_meteo', function ($atts) {
     $atts = shortcode_atts(array('code' => '75056'), $atts, 'icon_eu_meteo');
     $code = preg_match('/^[0-9A-Z]{5}$/', $atts['code']) ? $atts['code'] : '75056';
-    wp_enqueue_style('icon-eu-7-km', plugins_url('assets/icon-eu.css', __FILE__), array(), '3.1.0');
-    wp_enqueue_script('icon-eu-7-km', plugins_url('assets/icon-eu.js', __FILE__), array(), '3.1.0', true);
+    wp_enqueue_style('icon-eu-7-km', plugins_url('assets/icon-eu.css', __FILE__), array(), '3.1.1');
+    wp_enqueue_script('icon-eu-7-km', plugins_url('assets/icon-eu.js', __FILE__), array(), '3.1.1', true);
     $id = wp_unique_id('icon-eu-');
     ob_start(); ?>
     <section class="icon-eu-widget" data-code="<?php echo esc_attr($code); ?>" data-source="https://raw.githubusercontent.com/alertesmeteo-hub/ICON-EU-7-km/data/">
@@ -45,7 +45,7 @@ add_shortcode('icon_eu_meteo', function ($atts) {
         <div class="icon-eu-days" aria-label="Choisir un jour"></div><div class="icon-eu-table" tabindex="0" aria-label="Prévisions horaires"></div>
       </section>
       <p class="icon-eu-note">Source : <a href="https://opendata.dwd.de/weather/nwp/icon-eu/" target="_blank" rel="noopener noreferrer">DWD Open Data — ICON-EU</a>. Point de grille le plus proche de la commune, sans correction locale d’altitude. Heures de Paris. Après +78 h, température, vent et nuages sont interpolés ; les précipitations sont réparties sur trois heures et les rafales restent des maxima sur leur période indiquée. Ce sont des prévisions, pas des observations.</p>
-      <footer class="icon-eu-footer"><span>Données DWD Open Data · ICON‑EU</span><strong>Module ICON‑EU v3.1.0</strong></footer>
+      <footer class="icon-eu-footer"><span>Données DWD Open Data · ICON‑EU</span><strong>Module ICON‑EU v3.1.1</strong></footer>
     </section>
     <?php return ob_get_clean();
 });

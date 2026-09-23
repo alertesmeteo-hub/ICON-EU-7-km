@@ -1,5 +1,5 @@
 === ICON-EU 7 km — Alertes-météo ===
-Version: 3.1.0
+Version: 3.1.1
 Requires PHP: 7.4
 
 Installer le ZIP dans Extensions > Ajouter > Téléverser, puis activer.
@@ -14,3 +14,4 @@ Version 3.0.0 : cartes fixes France/Europe et zoom interactif pour la températu
 aux échéances H+24, H+48, H+72, H+96 et H+120.
 
 Version 3.1.0 : interface harmonisée avec les autres modules Alertes-Météo.
+Version 3.1.1 : vent et rafales affichés par pas de 5 km/h.

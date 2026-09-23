@@ -20,11 +20,11 @@ PRODUCTS = {
     "precipitation": {"label": "Précipitations totales", "unit": "mm", "variable": "tot_prec",
                       "levels": np.array([0.1, 1, 2, 5, 10, 15, 20, 30, 40, 50, 70, 100, 150, 200]), "cmap": "turbo"},
     "rafales": {"label": "Rafales maximales à l’échéance", "unit": "km/h", "variable": "vmax_10m",
-                "levels": np.arange(0, 181, 10), "cmap": "turbo"},
+                "levels": np.arange(0, 181, 5), "cmap": "turbo"},
     "nuages": {"label": "Couverture nuageuse totale", "unit": "%", "variable": "clct",
                "levels": np.arange(0, 110, 10), "cmap": "Blues"},
     "vent": {"label": "Vent moyen à 10 m", "unit": "km/h", "variable": ("u_10m", "v_10m"),
-             "levels": np.arange(0, 121, 10), "cmap": "viridis"},
+             "levels": np.arange(0, 121, 5), "cmap": "viridis"},
 }
 
 
@@ -117,7 +117,7 @@ def generate_maps(listings, run, output_dir, download, config_dir):
                 relative = f"maps/{region}/{product}-{step:03d}h.png"
                 _render(lon, lat, values, product, region, run, step, output_dir / relative, config_dir)
                 manifests[product].append({"region": region, "lead_hour": step, "image": relative})
-    payload = {"model": "ICON-EU", "pipeline_version": "3.1.0", "resolution_km": 7, "run": run, "steps": list(MAP_STEPS),
+    payload = {"model": "ICON-EU", "pipeline_version": "3.1.1", "resolution_km": 7, "run": run, "steps": list(MAP_STEPS),
                "products": {key: {"label": value["label"], "unit": value["unit"], "maps": manifests[key]}
                             for key, value in PRODUCTS.items()}}
     (output_dir / "maps" / "manifest.json").write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")

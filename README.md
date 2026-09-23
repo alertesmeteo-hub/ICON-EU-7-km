@@ -31,7 +31,7 @@ Commune initiale personnalisée :
 [icon_eu_meteo code="66136"]
 ```
 
-Le module propose une recherche par commune ou code postal, un choix du jour, la température, les précipitations, le vent, les rafales et les nuages. Chaque visite charge des JSON préparés sur GitHub, pas des fichiers GRIB.
+Le module propose des cartes fixes France/Europe, deux vues zoomables et le tableau communal. Les cartes couvrent la température à 2 m, les précipitations totales, le vent à 10 m, les rafales et la nébulosité aux échéances H+24, H+48, H+72, H+96 et H+120. Chaque visite charge les JSON et PNG préparés sur GitHub, jamais les fichiers GRIB.
 
 Le ZIP nommé **wordpress** est une extension installable. Les ZIP de sources React des versions 1.x ne le sont pas.
 
@@ -56,7 +56,7 @@ La source officielle reste DWD, y compris pour un usage commercial : consulter l
 - `wordpress/icon-eu-7-km/` : extension WordPress.
 - `app/` : interface React alternative utilisant la même branche `data`.
 
-La branche `data` contient `index.json`, `communes.json` et `departements/XX.json`.
+La branche `data` contient `index.json`, `communes.json`, `departements/XX.json`, `maps/manifest.json` et les cartes PNG France/Europe.
 
 ## Développement facultatif
 

@@ -4,8 +4,13 @@ from pathlib import Path
 import numpy as np
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'scripts'))
 from update_icon_eu import VARIABLES, STEPS, select_run, grid_indices, to_hourly, step_hours
+from icon_eu_maps import MAP_STEPS, PRODUCTS, REGIONS
 
 class PipelineTests(unittest.TestCase):
+    def test_map_contract(self):
+        self.assertEqual(MAP_STEPS, (24,48,72,96,120))
+        self.assertEqual(set(PRODUCTS), {'temperature','precipitation','rafales','nuages','vent'})
+        self.assertEqual(set(REGIONS), {'france','europe'})
     def test_eccodes_time_units(self):
         for value, expected in [('0m',0),('60m',1),('3600s',1),('78',78),('3h',3),('5D',120)]:
             self.assertEqual(step_hours(value), expected)

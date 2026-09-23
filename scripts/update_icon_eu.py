@@ -158,6 +158,8 @@ def generate(catalog, output, repository, force=False):
     compact = {'model_run': metadata['model_run'], 'columns':['code','name','department','postal_codes','latitude','longitude'], 'communes':[[c[0],c[1],c[2],c[3],c[5],c[6]] for c in communes]}
     (output/'communes.json').write_text(json.dumps(compact,ensure_ascii=False,separators=(',',':')),encoding='utf-8')
     (output/'index.json').write_text(json.dumps(metadata,ensure_ascii=False,indent=2),encoding='utf-8')
+    from icon_eu_maps import generate_maps
+    generate_maps(listings, run, output, download, Path(catalog).parent)
     print(f'Publication complète : {len(communes)} communes, 96 départements.', flush=True)
 
 if __name__ == '__main__':

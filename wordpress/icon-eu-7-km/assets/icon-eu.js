@@ -15,6 +15,8 @@
     const el = name => root.querySelector('.icon-eu-' + name);
     const source = root.dataset.source;
     let catalog = [], metadata = null, selected = null, request = 0;
+    let mapManifest = null, mapProduct = 'precipitation', mapRegion = 'france', mapLead = 120;
+    let mapView = 'fixed', mapScale = 1, mapX = 0, mapY = 0, dragging = false, dragStart = null;
     const clear = () => { el('table').replaceChildren(); el('days').replaceChildren(); el('meta').textContent = ''; };
     async function load(place) {
       selected = place;
@@ -59,6 +61,73 @@
         await load(place);
       } catch (error) { el('status').textContent = error.message; }
     }
+    const mapPanel = el('map-panel'), tablePanel = el('table-panel'), mapImage = el('map-image');
+    const mapStatus = el('map-status'), mapSummary = el('map-summary');
+    const viewButtons = [...root.querySelectorAll('[data-icon-view]')];
+    const regionButtons = [...root.querySelectorAll('[data-icon-region]')];
+    const zoomButtons = [...root.querySelectorAll('[data-icon-zoom]')];
+    function applyMapTransform() {
+      mapImage.style.transform = `translate(${mapX}px,${mapY}px) scale(${mapScale})`;
+      mapImage.style.cursor = mapView === 'fixed' ? 'default' : (dragging ? 'grabbing' : 'grab');
+    }
+    function resetMapZoom() { mapScale = 1; mapX = 0; mapY = 0; applyMapTransform(); }
+    function renderMap() {
+      if (!mapManifest) return;
+      const product = mapManifest.products[mapProduct];
+      const item = product.maps.find(m => m.region === mapRegion && Number(m.lead_hour) === Number(mapLead));
+      if (!item) { mapStatus.textContent = 'Carte indisponible pour cette échéance.'; return; }
+      mapStatus.textContent = 'Chargement de la carte…';
+      mapSummary.textContent = `${product.label} · ${mapRegion === 'france' ? 'France' : 'Europe'} · H+${mapLead}`;
+      mapImage.alt = `Carte ICON-EU ${product.label}, ${mapRegion}, échéance H+${mapLead}`;
+      mapImage.src = source + item.image;
+      resetMapZoom();
+      [...el('products').querySelectorAll('button')].forEach(b => b.setAttribute('aria-pressed', String(b.dataset.product === mapProduct)));
+      [...el('leads').querySelectorAll('button')].forEach(b => b.setAttribute('aria-pressed', String(Number(b.dataset.lead) === Number(mapLead))));
+      regionButtons.forEach(b => b.setAttribute('aria-pressed', String(b.dataset.iconRegion === mapRegion)));
+    }
+    function buildMapControls() {
+      el('products').replaceChildren(); el('leads').replaceChildren();
+      Object.entries(mapManifest.products).forEach(([key, product]) => {
+        const button = document.createElement('button'); button.type = 'button'; button.dataset.product = key;
+        button.textContent = product.label; button.addEventListener('click', () => { mapProduct = key; renderMap(); });
+        el('products').append(button);
+      });
+      mapManifest.steps.forEach(lead => {
+        const button = document.createElement('button'); button.type = 'button'; button.dataset.lead = lead;
+        button.textContent = `+${lead}h`; button.addEventListener('click', () => { mapLead = Number(lead); renderMap(); });
+        el('leads').append(button);
+      });
+      renderMap();
+    }
+    async function bootMaps() {
+      try { mapManifest = await fetchJson(source + 'maps/manifest.json'); buildMapControls(); }
+      catch (_) { mapStatus.textContent = 'Les cartes ICON-EU seront disponibles après le prochain run GitHub.'; }
+    }
+    function selectView(view) {
+      mapView = view; const isTable = view === 'table';
+      mapPanel.hidden = isTable; tablePanel.hidden = !isTable;
+      viewButtons.forEach(b => b.setAttribute('aria-pressed', String(b.dataset.iconView === view)));
+      if (!isTable && view !== 'fixed') { mapRegion = view; }
+      el('regions').hidden = !(!isTable && view === 'fixed');
+      root.classList.toggle('icon-eu-interactive', !isTable && view !== 'fixed');
+      if (!isTable) renderMap();
+    }
+    viewButtons.forEach(button => button.addEventListener('click', () => selectView(button.dataset.iconView)));
+    regionButtons.forEach(button => button.addEventListener('click', () => { mapRegion = button.dataset.iconRegion; renderMap(); }));
+    zoomButtons.forEach(button => button.addEventListener('click', () => {
+      const action = button.dataset.iconZoom;
+      if (action === 'reset') resetMapZoom(); else { mapScale = Math.max(1, Math.min(5, mapScale + (action === 'in' ? .35 : -.35))); applyMapTransform(); }
+    }));
+    mapImage.addEventListener('load', () => { mapStatus.textContent = ''; });
+    mapImage.addEventListener('error', () => { mapStatus.textContent = 'Carte temporairement indisponible.'; });
+    mapImage.addEventListener('pointerdown', event => {
+      if (mapView === 'fixed' || mapScale === 1) return; dragging = true; dragStart = [event.clientX - mapX, event.clientY - mapY]; mapImage.setPointerCapture(event.pointerId); applyMapTransform();
+    });
+    mapImage.addEventListener('pointermove', event => { if (!dragging) return; mapX = event.clientX - dragStart[0]; mapY = event.clientY - dragStart[1]; applyMapTransform(); });
+    mapImage.addEventListener('pointerup', () => { dragging = false; applyMapTransform(); });
+    mapImage.addEventListener('wheel', event => {
+      if (mapView === 'fixed') return; event.preventDefault(); mapScale = Math.max(1, Math.min(5, mapScale + (event.deltaY < 0 ? .2 : -.2))); applyMapTransform();
+    }, { passive: false });
     el('search').addEventListener('input', () => {
       const term = normalize(el('search').value.trim()); el('results').replaceChildren();
       if (term.length < 2) return;
@@ -67,7 +136,7 @@
       if (!matches.length) { const li = document.createElement('li'); li.textContent = 'Aucune commune trouvée.'; el('results').append(li); }
     });
     el('refresh').addEventListener('click', () => { if (selected) void load(selected); else void boot(); });
-    void boot();
+    void boot(); void bootMaps(); selectView('fixed');
   }
   function start() { document.querySelectorAll('.icon-eu-widget').forEach(init); }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start); else start();

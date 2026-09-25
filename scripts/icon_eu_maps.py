@@ -60,6 +60,9 @@ def _draw_boundaries(ax, config_dir: Path):
     for name, width in (("ne_50m_coastline", .55), ("ne_50m_admin_0_boundary_lines_land", .4)):
         reader = shapefile.Reader(str(config_dir / "natural-earth" / name))
         for shape in reader.shapes():
+            west, east = ax.get_xlim(); south, north = ax.get_ylim()
+            if shape.bbox[2] < west or shape.bbox[0] > east or shape.bbox[3] < south or shape.bbox[1] > north:
+                continue
             points = np.asarray(shape.points)
             if not len(points):
                 continue
@@ -72,12 +75,22 @@ def _render(lon, lat, values, product, region, run, step, output, config_dir):
     import matplotlib
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
-    from matplotlib.colors import BoundaryNorm
+    from matplotlib.colors import BoundaryNorm, ListedColormap
     spec = PRODUCTS[product]
     west, east, south, north = REGIONS[region]
     fig, ax = plt.subplots(figsize=(12, 8.2), dpi=150)
-    norm = BoundaryNorm(spec["levels"], plt.get_cmap(spec["cmap"]).N, clip=True)
-    mesh = ax.pcolormesh(lon, lat, values, cmap=spec["cmap"], norm=norm, shading="auto", rasterized=True)
+    cmap = plt.get_cmap(spec["cmap"]).copy()
+    if product == "precipitation":
+        cmap = ListedColormap(['#dcecf9', '#b6daf3', '#80b9ec', '#438bdf', '#16bfc7',
+                               '#35cb75', '#8bdc32', '#e9ee28', '#ffcd27', '#ff8b22',
+                               '#f4432c', '#c92368', '#ad19bf']).with_extremes(under='#f4f8fc', over='#751499')
+    norm = BoundaryNorm(spec["levels"], cmap.N)
+    ix = np.flatnonzero((lon >= west - 1) & (lon <= east + 1))
+    iy = np.flatnonzero((lat >= south - 1) & (lat <= north + 1))
+    # Isobands interpolate display geometry, never the values served to the probe.
+    mesh = ax.contourf(lon[ix], lat[iy], values[np.ix_(iy, ix)], levels=spec["levels"],
+                       cmap=cmap, norm=norm, extend="both", antialiased=False)
+    ax.set(xlim=(west, east), ylim=(south, north))
     _draw_boundaries(ax, config_dir)
     ax.set(xlim=(west, east), ylim=(south, north), xlabel="", ylabel="")
     # Un degré de longitude se resserre avec la latitude. Ce rapport évite
@@ -88,15 +101,18 @@ def _render(lon, lat, values, product, region, run, step, output, config_dir):
     ax.set_title(f"ICON-EU 7 km — {spec['label']} ({spec['unit']})\nRun {run_dt:%d/%m/%Y %H} UTC · H+{step}", fontsize=12, fontweight="bold")
     bar = fig.colorbar(mesh, ax=ax, orientation="vertical", pad=.015, fraction=.035)
     bar.set_label(spec["unit"], fontweight="bold")
-    ax.text(.5, .018, "www.alertes-meteo.com", transform=ax.transAxes, ha="center", va="bottom",
-            fontsize=8, color="white", fontweight="bold",
-            bbox={"facecolor": "#18353e", "alpha": .88, "edgecolor": "none", "pad": 4})
+    ax.set_anchor('C')
+    fig.text(.5, .06, "www.alertes-meteo.com", ha="center", va="bottom",
+            fontsize=8, color="#f04444", fontweight="bold",
+            bbox={"facecolor": "#111", "alpha": .94, "edgecolor": "none", "pad": 4})
     output.parent.mkdir(parents=True, exist_ok=True)
     fig.canvas.draw()
     position = ax.get_position()
     plot_box = [round(position.x0, 6), round(1.0 - position.y1, 6),
                 round(position.width, 6), round(position.height, 6)]
     fig.savefig(output, facecolor="white")
+    if bar.solids is not None: bar.solids.set_rasterized(False)
+    fig.savefig(output.with_suffix(".svg"), facecolor="white")
     plt.close(fig)
     return plot_box
 
@@ -108,11 +124,7 @@ def _write_probe_grid(lon, lat, values, region, output):
     lat_indices = np.flatnonzero((lat >= south) & (lat <= north))
     if not len(lon_indices) or not len(lat_indices):
         raise ValueError(f"Grille ICON-EU absente de la zone {region}")
-    # Environ 0,25° : assez précis pour la sonde, mais rapide à charger.
-    lon_stride = max(1, int(round(0.25 / max(abs(float(lon[1] - lon[0])), 1e-6))))
-    lat_stride = max(1, int(round(0.25 / max(abs(float(lat[1] - lat[0])), 1e-6))))
-    lon_indices = lon_indices[::lon_stride]
-    lat_indices = lat_indices[::lat_stride]
+    # Preserve every regional grid point, including local maxima.
     sampled = values[np.ix_(lat_indices, lon_indices)]
     payload = {
         "bounds": [west, east, south, north],
@@ -150,9 +162,10 @@ def generate_maps(listings, run, output_dir, download, config_dir):
                 plot_box = _render(lon, lat, values, product, region, run, step, output_dir / relative, config_dir)
                 _write_probe_grid(lon, lat, values, region, output_dir / values_relative)
                 manifests[product].append({"region": region, "lead_hour": step, "image": relative,
+                                           "vector": relative.replace(".png", ".svg"),
                                            "values": values_relative, "bounds": list(REGIONS[region]),
                                            "plot_box": plot_box})
-    payload = {"model": "ICON-EU", "pipeline_version": "3.2.0", "resolution_km": 7, "run": run, "steps": list(MAP_STEPS),
+    payload = {"model": "ICON-EU", "pipeline_version": "3.3.0", "resolution_km": 7, "run": run, "steps": list(MAP_STEPS),
                "products": {key: {"label": value["label"], "unit": value["unit"], "maps": manifests[key]}
                             for key, value in PRODUCTS.items()}}
     (output_dir / "maps" / "manifest.json").write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")

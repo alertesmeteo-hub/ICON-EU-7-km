@@ -36,6 +36,7 @@ jobs:
         run: |
           php -l wordpress/icon-eu-7-km/icon-eu-7-km.php
           node --check wordpress/icon-eu-7-km/assets/icon-eu.js
+          node --check wordpress/icon-eu-7-km/assets/icon-vector-zoom.js
       - name: Vérifier les calculs météo
         run: python -m unittest discover -s tests -p 'test_*.py' -v
       - name: Construire les prévisions DWD ICON-EU
@@ -66,6 +67,8 @@ jobs:
           assert maps['model']=='ICON-EU' and maps['steps']==[24,48,72,96,120]
           assert set(maps['products'])=={'temperature','precipitation','rafales','nuages','vent'}
           assert len(list((p/'maps').glob('*/*.png')))==50
+          assert maps['pipeline_version']=='3.3.0'
+          assert len(list((p/'maps').glob('*/*.svg')))==50
           assert len(list((p/'maps').glob('*/*-values.json')))==50
           count=0
           for f in (p/'departements').glob('*.json'):

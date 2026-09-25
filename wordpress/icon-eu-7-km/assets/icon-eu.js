@@ -64,12 +64,13 @@
       } catch (error) { el('status').textContent = error.message; }
     }
     const mapPanel = el('map-panel'), tablePanel = el('table-panel'), mapImage = el('map-image');
+    const vectorZoom = new window.IconVectorZoom(mapImage);
     const mapStatus = el('map-status'), mapSummary = el('map-summary'), mapProbe = el('map-probe');
     const viewButtons = [...root.querySelectorAll('[data-icon-view]')];
     const regionButtons = [...root.querySelectorAll('[data-icon-region]')];
     const zoomButtons = [...root.querySelectorAll('[data-icon-zoom]')];
     function applyMapTransform() {
-      mapImage.style.transform = `translate(${mapX}px,${mapY}px) scale(${mapScale})`;
+      vectorZoom.transform(mapScale, mapX, mapY);
       mapImage.style.cursor = mapView === 'fixed' ? 'default' : (dragging ? 'grabbing' : 'grab');
     }
     function resetMapZoom() { mapScale = 1; mapX = 0; mapY = 0; applyMapTransform(); }
@@ -88,11 +89,9 @@
     function showProbe(event) {
       if (mapView === 'fixed' || dragging || !probeGrid || !mapItem) { hideProbe(); return; }
       const imageRect = mapImage.getBoundingClientRect(), viewerRect = mapImage.parentElement.getBoundingClientRect();
-      const box = mapItem.plot_box || [0, 0, 1, 1];
-      const imageX = (event.clientX - imageRect.left) / imageRect.width;
-      const imageY = (event.clientY - imageRect.top) / imageRect.height;
-      const x = (imageX - box[0]) / box[2], y = (imageY - box[1]) / box[3];
-      if (x < 0 || x > 1 || y < 0 || y > 1) { hideProbe(); return; }
+      const point = vectorZoom.point(event, mapItem.plot_box);
+      if (!point) { hideProbe(); return; }
+      const [x, y] = point;
       const bounds = probeGrid.bounds;
       const longitude = bounds[0] + x * (bounds[1] - bounds[0]);
       const latitude = bounds[3] - y * (bounds[3] - bounds[2]);
@@ -119,7 +118,7 @@
       mapStatus.textContent = 'Chargement de la carte…';
       mapSummary.textContent = `${product.label} · ${mapRegion === 'france' ? 'France' : 'Europe'} · H+${mapLead}`;
       mapImage.alt = `Carte ICON-EU ${product.label}, ${mapRegion}, échéance H+${mapLead}`;
-      mapImage.src = source + item.image;
+      vectorZoom.load(item.vector ? source + item.vector : null, item.plot_box, mapView !== 'fixed', source + item.image);
       void loadProbe(item);
       resetMapZoom();
       [...el('products').querySelectorAll('button')].forEach(b => b.setAttribute('aria-pressed', String(b.dataset.product === mapProduct)));
@@ -162,12 +161,14 @@
     }));
     mapImage.addEventListener('load', () => { mapStatus.textContent = ''; });
     mapImage.addEventListener('error', () => { mapStatus.textContent = 'Carte temporairement indisponible.'; });
+    mapImage.addEventListener('vector-unavailable', () => { mapStatus.textContent = 'Rendu vectoriel indisponible : carte fixe conservée.'; });
     mapImage.addEventListener('pointerdown', event => {
       if (mapView === 'fixed' || mapScale === 1) return; dragging = true; dragStart = [event.clientX - mapX, event.clientY - mapY]; mapImage.setPointerCapture(event.pointerId); applyMapTransform();
     });
     mapImage.addEventListener('pointermove', event => { if (dragging) { mapX = event.clientX - dragStart[0]; mapY = event.clientY - dragStart[1]; applyMapTransform(); hideProbe(); } else showProbe(event); });
     mapImage.addEventListener('pointerleave', hideProbe);
     mapImage.addEventListener('pointerup', event => { dragging = false; applyMapTransform(); showProbe(event); });
+    mapImage.addEventListener('pointercancel', () => { dragging = false; applyMapTransform(); hideProbe(); });
     mapImage.addEventListener('wheel', event => {
       if (mapView === 'fixed') return; event.preventDefault(); mapScale = Math.max(1, Math.min(5, mapScale + (event.deltaY < 0 ? .2 : -.2))); applyMapTransform();
     }, { passive: false });

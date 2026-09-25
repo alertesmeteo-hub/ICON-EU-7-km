@@ -1,11 +1,11 @@
 {
   "schema_version": 2,
-  "pipeline_version": "3.2.0",
+  "pipeline_version": "3.3.0",
   "status": "ok",
   "model": "ICON-EU",
   "resolution_km": 7,
   "model_run": "2026-09-25T12:00:00+00:00",
-  "generated_at": "2026-09-25T17:35:56.595392+00:00",
+  "generated_at": "2026-09-25T19:16:19.234460+00:00",
   "source": "DWD Open Data",
   "source_url": "https://opendata.dwd.de/weather/nwp/icon-eu/grib/",
   "timezone": "Europe/Paris",
